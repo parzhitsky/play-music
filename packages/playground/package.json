@@ -18,5 +18,8 @@
     "tsc-alias": "1.8.10",
     "tsx": "4.19.1",
     "typescript": "*"
+  },
+  "dependencies": {
+    "node-web-audio-api": "0.21.2"
   }
 }
