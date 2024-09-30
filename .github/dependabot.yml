@@ -9,18 +9,8 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
-    labels:
-      - "dependencies"
-      - "Domain: meta"
-      - "Priority: low"
-      - "Type: improvement"
 
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'weekly'
-    labels:
-      - "dependencies"
-      - "Domain: meta"
-      - "Priority: low"
-      - "Type: improvement"
