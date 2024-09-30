@@ -3,8 +3,6 @@ dist
 dist-ssr
 *.local
 coverage
-packages/playground/src/*
-!packages/playground/src/.gitkeep
 
 # Logs
 logs
