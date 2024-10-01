@@ -31,24 +31,36 @@ export const rest = memoized((duration: number): Sound => {
 })
 
 /**
- * Alias for `NaN`, which represents frequency of a rest
+ * Alias for `NaN`, which is both the distance from the base note to a pause, and the frequency of a pause
  *
  * @example
- * ```ts
  * play([
  *   [
- *     ...notes(1 / 4, [r, r, -2, 3, 5, -2, 3, 5]),
- *     ...notes(1 / 4, [r, r, -2, 3, 5, -2, 3, 5]),
+ *     ...notes(1 / 4, [_, _, -2, 3, 7, -2, 3, 7]),
  *   ],
  *   [
  *     rest(1 / 4), note(7 / 4, -9),
- *     rest(1 / 4), note(7 / 4, -9),
  *   ],
  *   [
- *     note(2, -9),
  *     note(2, -9),
  *   ],
  * ])
- * ```
+ *
+ * @example
+ * const g = 391.9954359817492
+ * const c = 523.2511306011972
+ * const e = 659.2551138257401
+ *
+ * play([
+ *   [
+ *     [_, 1/2], [g, 1/4], [c, 1/4], [e, 1/4], [g, 1/4], [c, 1/4], [e, 1/4],
+ *   ],
+ *   [
+ *     rest(1 / 4), note(7 / 4, -9),
+ *   ],
+ *   [
+ *     note(2, -9),
+ *   ],
+ * ])
  */
 export const r = NaN
