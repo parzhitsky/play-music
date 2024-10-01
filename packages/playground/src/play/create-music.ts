@@ -52,7 +52,7 @@ export function notes(duration: number, semitonesFromBase: number[]): Voice {
  *     [_, 1/2], [g, 1/4], [c, 1/4], [e, 1/4], [g, 1/4], [c, 1/4], [e, 1/4],
  *   ],
  *   [
- *     rest(1 / 4), note(7 / 4, -9),
+ *     [_, 1/4], note(7 / 4, -9),
  *   ],
  *   [
  *     note(2, -9),
