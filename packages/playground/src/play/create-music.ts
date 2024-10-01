@@ -26,10 +26,6 @@ export function notes(duration: number, semitonesFromBase: number[]): Voice {
   return semitonesFromBase.map((distance) => note(duration, distance))
 }
 
-export const rest = memoized((duration: number): Sound => {
-  return [NaN, duration]
-})
-
 /**
  * Alias for `NaN`, which is both the distance from the base note to a pause, and the frequency of a pause
  *
@@ -63,4 +59,8 @@ export const rest = memoized((duration: number): Sound => {
  *   ],
  * ])
  */
-export const r = NaN
+export const _ = NaN
+
+export const pause = memoized((duration: number): Sound => {
+  return [_, duration]
+})
