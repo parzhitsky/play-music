@@ -1,7 +1,7 @@
 import { calculateFrequency } from './calculate-frequency.js'
 import { DurationContext, DurationContextParams } from "./duration-context.js"
 import { memoized } from './memoized.js'
-import { Voice, Music, Sound } from "./music.type.js"
+import { Voice, Music, Sound, Pause } from "./music.js" // TODO: merge music.js and create-music.js
 
 interface CreateMusicParams extends DurationContextParams {}
 
@@ -61,6 +61,6 @@ export function notes(duration: number, semitonesFromBase: number[]): Voice {
  */
 export const _ = NaN
 
-export const pause = memoized((duration: number): Sound => {
+export const pause = memoized((duration: number): Pause => {
   return [_, duration]
 })

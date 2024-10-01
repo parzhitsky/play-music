@@ -1,5 +1,5 @@
 import { AudioContext, GainNode, OscillatorNode } from 'node-web-audio-api' // FIXME: https://github.com/ircam-ismm/node-web-audio-api/pull/138
-import { type Music } from './music.type.js'
+import { isPause, type Music } from './music.js'
 
 function describeItem(item: unknown, voiceIndex: number, itemIndex: number): string {
   return `item ${JSON.stringify(item)}, voice index ${voiceIndex}, item index ${itemIndex}`
@@ -26,7 +26,7 @@ export async function play(music: Music): Promise<void> {
           throw new Error(`Duration must be a finite positive number (${describeItem(item, voiceIndex, currItemIndex)})`)
         }
 
-        const isRest = isNaN(frequency)
+        const isRest = isPause(item)
 
         if (!isRest && (frequency <= 0 || !isFinite(frequency))) {
           throw new Error(`Frequency of a sound must be a finite positive number (${describeItem(item, voiceIndex, currItemIndex)})`)
