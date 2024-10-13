@@ -1,13 +1,13 @@
-import { GainNode, OscillatorNode } from 'node-web-audio-api'
 import { isPause, type Music } from './create-music-utils.js'
 
 function describeItem(item: unknown, voiceIndex: number, itemIndex: number): string {
   return `item ${JSON.stringify(item)}, voice index ${voiceIndex}, item index ${itemIndex}`
 }
 
+type SetValueAtTimeParams = Readonly<Parameters<AudioParam['setValueAtTime']>>
+
 interface Voice {
-  readonly oscillator: OscillatorNode
-  readonly gain: GainNode
+  readonly frequencyTimeline: readonly SetValueAtTimeParams[]
   readonly duration: number
 }
 
@@ -16,16 +16,13 @@ export interface Interpretation {
 }
 
 export class MusicInterpreter {
-  constructor(protected readonly audioContext: AudioContext) {}
-
   interpret(music: Music): Interpretation {
     const voices: Voice[] = []
 
     for (const [voiceLineIndex, voiceLine] of music.entries()) {
-      const oscillator = new OscillatorNode(this.audioContext, { type: 'sine' })
-      const gain = new GainNode(this.audioContext, { gain: 0.25 })
+      const frequencyTimeline: SetValueAtTimeParams[] = []
 
-      let soundStartsAt = this.audioContext.currentTime
+      let soundStartsAt = 0
       let voiceDuration = 0
       let currItemIndex = 0
 
@@ -43,14 +40,14 @@ export class MusicInterpreter {
           throw new Error(`Frequency of a sound must be a finite positive number (${describeItem(item, voiceLineIndex, currItemIndex)})`)
         }
 
-        oscillator.frequency.setValueAtTime(isRest ? 0 : frequency, soundStartsAt)
+        frequencyTimeline.push([isRest ? 0 : frequency, soundStartsAt])
 
         soundStartsAt += duration
         voiceDuration += duration
         currItemIndex += 1
       }
 
-      voices.push({ oscillator, gain, duration: voiceDuration })
+      voices.push({ frequencyTimeline, duration: voiceDuration })
     }
 
     return { voices }
