@@ -1,44 +1,17 @@
-import { AudioContext, GainNode, OscillatorNode } from 'node-web-audio-api' // FIXME: https://github.com/ircam-ismm/node-web-audio-api/pull/138
-import { isPause, type Music } from './music.js'
-
-function describeItem(item: unknown, voiceIndex: number, itemIndex: number): string {
-  return `item ${JSON.stringify(item)}, voice index ${voiceIndex}, item index ${itemIndex}`
-}
+import { AudioContext } from 'node-web-audio-api' // FIXME: https://github.com/ircam-ismm/node-web-audio-api/pull/138
+import { type Music } from './music.js'
+import { MusicInterpreter } from './music-interpreter.js'
 
 export async function play(music: Music): Promise<void> {
   const audioContext = new AudioContext()
-  const voicesPlayed: Promise<void>[] = []
+  const interpreter = new MusicInterpreter(audioContext)
 
   try {
-    for (const [voiceIndex, voice] of music.entries()) {
-      const oscillator = new OscillatorNode(audioContext, { type: 'sine' })
-      const gain = new GainNode(audioContext, { gain: 0.25 })
+    const { voiceLines } = interpreter.interpret(music)
 
-      let soundStartsAt = audioContext.currentTime
-      let voiceDuration = 0
-      let currItemIndex = 0
+    const voicesPlayed: Promise<void>[] = []
 
-      for (const item of voice) {
-        const [frequency, duration] = item
-
-        if (duration <= 0 || !isFinite(duration)) {
-          // TODO: allow zero duration for labels, marks, per-voice instructions, etc.
-          throw new Error(`Duration must be a finite positive number (${describeItem(item, voiceIndex, currItemIndex)})`)
-        }
-
-        const isRest = isPause(item)
-
-        if (!isRest && (frequency <= 0 || !isFinite(frequency))) {
-          throw new Error(`Frequency of a sound must be a finite positive number (${describeItem(item, voiceIndex, currItemIndex)})`)
-        }
-
-        oscillator.frequency.setValueAtTime(isRest ? 0 : frequency, soundStartsAt)
-
-        soundStartsAt += duration
-        voiceDuration += duration
-        currItemIndex += 1
-      }
-
+    for (const { oscillator, gain, duration } of voiceLines) {
       const voicePlayed = new Promise<void>((resolve) => {
         oscillator.onended = () => {
           oscillator.disconnect()
