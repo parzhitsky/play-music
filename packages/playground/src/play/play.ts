@@ -1,5 +1,5 @@
 import { AudioContext } from 'node-web-audio-api'
-import { type Music } from './music.js'
+import { type Music } from './create-music.js'
 import { MusicInterpreter } from './music-interpreter.js'
 
 export async function play(music: Music): Promise<void> {
@@ -7,11 +7,11 @@ export async function play(music: Music): Promise<void> {
   const interpreter = new MusicInterpreter(audioContext)
 
   try {
-    const { voiceLines } = interpreter.interpret(music)
+    const { voices } = interpreter.interpret(music)
 
     const voicesPlayed: Promise<void>[] = []
 
-    for (const { oscillator, gain, duration } of voiceLines) {
+    for (const { oscillator, gain, duration } of voices) {
       const voicePlayed = new Promise<void>((resolve) => {
         oscillator.onended = () => {
           oscillator.disconnect()

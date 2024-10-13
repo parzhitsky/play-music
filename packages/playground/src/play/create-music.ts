@@ -1,15 +1,28 @@
-import { calculateFrequency } from './calculate-frequency.js'
 import { DurationContext, DurationContextParams } from "./duration-context.js"
-import { memoized } from './memoized.js'
-import { Voice, Music, Sound, Pause } from "./music.js" // TODO: merge music.js and create-music.js
 
-interface CreateMusicParams extends DurationContextParams {}
+type VoiceLineItemBase<Payload extends readonly [unknown, ...unknown[]]> = readonly [duration: number, ...payload: Payload]
 
-interface VoicesGetter {
-  (durationContext: DurationContext): Voice[]
+export type Sound = VoiceLineItemBase<[frequency: number]>
+export type Pause = Sound // pause is a sound with NaN frequency
+export type VoiceLineItem =
+  | Sound
+  | Pause
+
+export type VoiceLine = Iterable<VoiceLineItem>
+export type VoiceLines = readonly VoiceLine[]
+
+/** Alias for {@link VoiceLines} */
+export type Music = VoiceLines
+
+interface VoiceLinesGetter {
+  (durationContext: DurationContext): VoiceLines
 }
 
-export function createMusic(params: CreateMusicParams, getVoices: VoicesGetter): Music {
+interface CreateMusicParams extends DurationContextParams {
+  // so far, no additional parameters
+}
+
+export function createMusic(params: CreateMusicParams, getVoices: VoiceLinesGetter): Music {
   const { ...durationContextParams } = params
 
   const durationContext = new DurationContext(durationContextParams)
@@ -17,50 +30,3 @@ export function createMusic(params: CreateMusicParams, getVoices: VoicesGetter):
 
   return voices
 }
-
-export const note = memoized((duration: number, semitonesFromBase: number): Sound => {
-  return [calculateFrequency(semitonesFromBase), duration]
-})
-
-export function notes(duration: number, semitonesFromBase: number[]): Voice {
-  return semitonesFromBase.map((distance) => note(duration, distance))
-}
-
-/**
- * Alias for `NaN`, which is both the distance from the base note to a pause, and the frequency of a pause
- *
- * @example
- * play([
- *   [
- *     ...notes(1 / 4, [_, _, -2, 3, 7, -2, 3, 7]),
- *   ],
- *   [
- *     rest(1 / 4), note(7 / 4, -9),
- *   ],
- *   [
- *     note(2, -9),
- *   ],
- * ])
- *
- * @example
- * const g = 391.9954359817492
- * const c = 523.2511306011972
- * const e = 659.2551138257401
- *
- * play([
- *   [
- *     [_, 1/2], [g, 1/4], [c, 1/4], [e, 1/4], [g, 1/4], [c, 1/4], [e, 1/4],
- *   ],
- *   [
- *     [_, 1/4], note(7 / 4, -9),
- *   ],
- *   [
- *     note(2, -9),
- *   ],
- * ])
- */
-export const _ = NaN
-
-export const pause = memoized((duration: number): Pause => {
-  return [_, duration]
-})

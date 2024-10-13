@@ -1,4 +1,5 @@
-import { createMusic, note, notes, pause } from './play/create-music.js'
+import { createMusic } from './play/create-music.js'
+import { note, notes, pause } from './play/create-music-utils.js'
 
 export const gaudeamus = createMusic({ bpm: 80 }, ({ b, d }) => [
   [

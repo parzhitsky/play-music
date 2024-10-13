@@ -1,4 +1,5 @@
-import { pause, notes, note, createMusic, _ } from './play/create-music.js'
+import { createMusic } from './play/create-music.js'
+import { pause, notes, note, _ } from './play/create-music-utils.js'
 
 export const bachPrelude1 = createMusic({ bpm: 65 }, ({ b }) => [
   [
