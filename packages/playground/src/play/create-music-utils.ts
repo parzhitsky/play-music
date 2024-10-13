@@ -1,7 +1,5 @@
 import { calculateFrequency } from "./calculate-frequency.js"
-import { Sound, VoiceLineItem, Pause, VoiceLine } from "./create-music.js"
-
-export { Sound, Pause, VoiceLineItem, VoiceLine, VoiceLines, Music } from './create-music.js'
+import { Sound, Pause, Label, VoiceLineItem, VoiceLine } from "./create-music.js"
 
 /**
  * Alias for `NaN`, which is both the distance from the base note to a pause, as well as the frequency of a pause
@@ -34,4 +32,16 @@ export function note(duration: number, semitonesFromBase: number): Sound {
 
 export function notes(duration: number, semitonesFromBase: number[]): VoiceLine {
   return semitonesFromBase.map((distance) => note(duration, distance))
+}
+
+export function label(text: string): Label {
+  return [0, text]
+}
+
+function isLasting(item: VoiceLineItem): boolean {
+  return item[0] > 0
+}
+
+export function isLabel(item: VoiceLineItem): item is Label {
+  return !isLasting(item) && typeof item[1] === 'string'
 }

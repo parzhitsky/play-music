@@ -1,5 +1,5 @@
 import { createMusic } from './play/create-music.js'
-import { note, notes, pause } from './play/create-music-utils.js'
+import { label, note, notes, pause } from './play/create-music-utils.js'
 
 export const gaudeamus = createMusic({ bpm: 80 }, ({ b, d }) => [
   [
@@ -8,7 +8,7 @@ export const gaudeamus = createMusic({ bpm: 80 }, ({ b, d }) => [
     note(d(3 / 4), 3), note(b / 4, -2), note(b, -2), note(b, 3),
     // gau - - - - - - de - - - - - - - a - - - - - -mus
 
-    note(d(3 / 4), 0), note(b / 4, 0), note(d(2), 0),
+    note(d(3 / 4), 0), note(b / 4, 0), note(d(2), 0), label("1"),
     // i - - - - - - - gi - - - - - - -tur
 
     note(d(3 / 4), 2), note(b / 4, 3), note(b, 5), note(b, 2),
@@ -41,7 +41,7 @@ export const gaudeamus = createMusic({ bpm: 80 }, ({ b, d }) => [
     note(d(3 / 4), -9), note(b / 4, -9), note(d(2), -9),
     // i - - - - - - - -gi - - - - - - - tur
 
-    note(d(3 / 4), -7), note(b / 4, -5), note(b, -4), note(b, -7),
+    note(d(3 / 4), -7), note(b / 4, -5), note(b, -4), note(b, -7), label("2"),
     // ju - - - - - - - ve - - - - - - - nes          dum
 
     note(b, -9), note(b, -9), pause(b),

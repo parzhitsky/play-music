@@ -4,9 +4,11 @@ type VoiceLineItemBase<Payload extends readonly [unknown, ...unknown[]]> = reado
 
 export type Sound = VoiceLineItemBase<[frequency: number]>
 export type Pause = Sound // pause is a sound with NaN frequency
+export type Label = VoiceLineItemBase<[text: string]>
 export type VoiceLineItem =
   | Sound
   | Pause
+  | Label
 
 export type VoiceLine = Iterable<VoiceLineItem>
 export type VoiceLines = readonly VoiceLine[]
