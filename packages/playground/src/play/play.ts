@@ -24,7 +24,7 @@ export async function play(music: Music): Promise<void> {
 
       oscillator.connect(gain).connect(audioContext.destination)
       oscillator.start()
-      oscillator.stop(audioContext.currentTime + voiceDuration)
+      oscillator.stop(audioContext.currentTime + duration)
     }
 
     await Promise.all(voicesPlayed)
