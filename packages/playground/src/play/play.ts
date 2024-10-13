@@ -19,50 +19,40 @@ export async function play(music: Music, {
 
     const { voices, labels } = interpreter.interpret(music)
 
-    if (startLabel != null && !(startLabel in labels)) {
-      throw new Error(`Label "${startLabel}" was not found`)
-    }
+    const startTime = labels.maybeGetExistingTimeByMaybeText(startLabel) ?? 0
+    const stopTime = labels.maybeGetExistingTimeByMaybeText(stopLabel) ?? Infinity
 
-    if (stopLabel != null && !(stopLabel in labels)) {
-      throw new Error(`Label "${stopLabel}" was not found`)
-    }
-
-    const startLabelTimestamp = startLabel == null ? 0 : labels[startLabel]
-    const stopLabelTimestamp = stopLabel == null ? Infinity : labels[stopLabel]
-    const maxDuration = stopLabelTimestamp - startLabelTimestamp
-
-    if (maxDuration <= 0) {
+    if (startTime >= stopTime) {
       throw new Error(`Start label ("${startLabel}") must come strictly earlier than stop label ("${stopLabel}")`)
     }
 
-    const voicesPlayed: Promise<void>[] = []
-
-    for (const { frequencyTimeline, duration: durationOriginal } of voices) {
+    const played = voices.map((voice): Promise<void> => {
       const oscillator = new OscillatorNode(audioContext, { type: 'sine' })
       const gain = new GainNode(audioContext, { gain: 0.25 })
 
-      for (const [frequency, timestampOriginal] of frequencyTimeline) {
-        const timestamp = Math.max(0, timestampOriginal - startLabelTimestamp)
+      for (const [frequency, itemTime] of voice.frequencyTimeline) {
+        const itemTimeShifted = Math.max(0, itemTime - startTime)
 
-        oscillator.frequency.setValueAtTime(frequency, timestamp)
+        oscillator.frequency.setValueAtTime(frequency, itemTimeShifted)
       }
 
-      const duration = Math.min(maxDuration, durationOriginal)
+      const durationReduced = Math.min(stopTime - startTime, voice.duration)
 
       oscillator.start(audioContext.currentTime)
-      oscillator.stop(audioContext.currentTime + duration)
+      oscillator.stop(audioContext.currentTime + durationReduced)
       oscillator.connect(gain).connect(audioContext.destination)
-      voicesPlayed.push(new Promise<void>((resolve) => {
+
+      return new Promise((resolve) => {
         oscillator.onended = () => {
           oscillator.disconnect()
           gain.disconnect()
           resolve()
         }
-      }))
-    }
+      })
+    })
 
     await audioContext.resume()
-    await Promise.all(voicesPlayed)
+    await Promise.all(played)
   } finally {
     await audioContext.close()
   }

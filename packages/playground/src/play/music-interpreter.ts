@@ -1,5 +1,6 @@
 import { type Music } from './create-music.js'
 import { isLabel, isPause } from './create-music-utils.js'
+import { Labels } from './labels.js'
 
 function describeItem(item: unknown, voiceIndex: number, itemIndex: number): string {
   return `item ${JSON.stringify(item)}, voice index ${voiceIndex}, item index ${itemIndex}`
@@ -12,17 +13,15 @@ interface Voice {
   readonly duration: number
 }
 
-type Labels = Record<string, number>
-
 export interface Interpretation {
   readonly voices: readonly Voice[]
-  readonly labels: Readonly<Labels>
+  readonly labels: Labels.Readonly
 }
 
 export class MusicInterpreter {
   interpret(music: Music): Interpretation {
     const voices: Voice[] = []
-    const labels = Object.create(null) as Labels
+    const labels = new Labels()
 
     for (const [voiceLineIndex, voiceLine] of music.entries()) {
       const frequencyTimeline: SetValueAtTimeParams[] = []
@@ -32,13 +31,7 @@ export class MusicInterpreter {
 
       for (const item of voiceLine) {
         if (isLabel(item)) {
-          const [, label] = item
-
-          if (label in labels) {
-            throw new Error(`Label "${label}" is already defined in voice index ${voiceLineIndex}`)
-          }
-
-          labels[label] = nextItemStart
+          labels.add(item[1], nextItemStart)
         } else {
           const [duration, frequency] = item
 
@@ -64,6 +57,9 @@ export class MusicInterpreter {
       voices.push({ frequencyTimeline, duration: nextItemStart })
     }
 
-    return { voices, labels }
+    return {
+      voices,
+      labels,
+    }
   }
 }
