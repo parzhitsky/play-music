@@ -1,4 +1,4 @@
-import { AudioContext } from 'node-web-audio-api' // FIXME: https://github.com/ircam-ismm/node-web-audio-api/pull/138
+import { AudioContext } from 'node-web-audio-api'
 import { type Music } from './music.js'
 import { MusicInterpreter } from './music-interpreter.js'
 

@@ -20,6 +20,6 @@
     "typescript": "*"
   },
   "dependencies": {
-    "node-web-audio-api": "0.21.2"
+    "node-web-audio-api": "0.21.3"
   }
 }
