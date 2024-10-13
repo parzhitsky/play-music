@@ -24,11 +24,11 @@ interface CreateMusicParams extends DurationContextParams {
   // so far, no additional parameters
 }
 
-export function createMusic(params: CreateMusicParams, getVoices: VoiceLinesGetter): Music {
+export function createMusic(params: CreateMusicParams, getVoiceLines: VoiceLinesGetter): Music {
   const { ...durationContextParams } = params
 
   const durationContext = new DurationContext(durationContextParams)
-  const voices = getVoices(durationContext)
+  const voiceLines = getVoiceLines(durationContext)
 
-  return voices
+  return voiceLines
 }
