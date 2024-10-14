@@ -1,6 +1,6 @@
-export const BASE_FREQUENCY = 440
+import { SEMITONES_PER_OCTAVE } from './tonal-context/calculate-semitones-from-base.js'
 
-const SEMITONES_PER_OCTAVE = 12
+export const BASE_FREQUENCY = 440
 
 const OCTAVE_FREQUENCY_DIFFERENCE = 2
 
