@@ -26,12 +26,12 @@ export function isPause(item: VoiceLineItem): item is Pause {
   return isSound(item) && Object.is(_, item[1])
 }
 
-export function note(duration: number, semitonesFromBase: number): Sound {
+export function semi(duration: number, semitonesFromBase: number): Sound {
   return sound(duration, calculateFrequency(semitonesFromBase))
 }
 
-export function notes(duration: number, semitonesFromBase: number[]): VoiceLine {
-  return semitonesFromBase.map((distance) => note(duration, distance))
+export function semis(duration: number, semitonesFromBase: number[]): VoiceLine {
+  return semitonesFromBase.map((distance) => semi(duration, distance))
 }
 
 export function label(text: string): Label {
