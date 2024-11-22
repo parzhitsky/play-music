@@ -30,9 +30,9 @@ export async function play(music: Music, {
     const { voices, labels } = interpreter.interpret(music)
 
     const startTime = labels.maybeGetExistingTimeByMaybeText(startLabel) ?? 0
-    const stopTime = labels.maybeGetExistingTimeByMaybeText(stopLabel) ?? Infinity
+    const stopTime = labels.maybeGetExistingTimeByMaybeText(stopLabel)
 
-    if (startTime >= stopTime) {
+    if (stopTime != null && startTime >= stopTime) {
       throw new Error(`Start label ("${startLabel}") must come strictly earlier than stop label ("${stopLabel}")`)
     }
 
@@ -55,7 +55,7 @@ export async function play(music: Music, {
 
       oscillator.frequency.setValueAtTime(0, extraItemTime)
 
-      const durationReduced = Math.min(stopTime - startTime, voice.duration)
+      const durationReduced = (stopTime ?? voice.duration) - startTime
 
       oscillator.start(audioContext.currentTime)
       oscillator.stop(audioContext.currentTime + durationReduced + (endCushionMsec / 1000))
