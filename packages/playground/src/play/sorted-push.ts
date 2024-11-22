@@ -3,6 +3,7 @@ interface Comparator<Item> {
 }
 
 /**
+ * Inserts an item into a sorted array while maintaining the sort order.
  * @param compare Produces a negative number if `a` should come before `b`, a positive number if `a` should come after `b`, or zero if they are equal
  * @returns The index at which the item was inserted
  */
