@@ -1,4 +1,4 @@
-import { gaudeamus } from './gaudeamus.music.js'
+import { bachPrelude1 } from './bach-prelude-1.music.js'
 import { play } from './play/play.js'
 
-await play(gaudeamus)
+await play(bachPrelude1)
