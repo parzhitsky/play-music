@@ -51,7 +51,7 @@ export class Labels {
     const time = this.getTimeByText(text)
 
     if (time == null) {
-      throw new Error(`Label "${text}" was not found`)
+      throw new Error(`Could not find label "${text}"`)
     }
 
     return time
