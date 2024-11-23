@@ -1,4 +1,8 @@
-import { DurationContext, DurationContextParams } from "./duration-context.js"
+import { DurationContext, DurationContextParams } from './duration-context.js'
+import { createScale } from './scale-context/create-scale.js'
+import { Letter } from './scale-context/letter.js'
+import { ScaleContext } from './scale-context/scale-context.js'
+import { Scale } from './scale-context/scale.js'
 
 type VoiceLineItemBase<Payload extends readonly [unknown, ...unknown[]]> = readonly [duration: number, ...payload: Payload]
 
@@ -17,18 +21,27 @@ export type VoiceLines = readonly VoiceLine[]
 export type Music = VoiceLines
 
 interface VoiceLinesGetter {
-  (durationContext: DurationContext): VoiceLines
+  (
+    durationContext: DurationContext,
+    scaleContext: ScaleContext,
+  ): VoiceLines
 }
 
 interface CreateMusicParams extends DurationContextParams {
-  // so far, no additional parameters
+  readonly scale?: Scale
 }
 
+const cMajor = createScale(Letter.C, [2, 2, 1, 2, 2, 2, 1])
+
 export function createMusic(params: CreateMusicParams, getVoiceLines: VoiceLinesGetter): Music {
-  const { ...durationContextParams } = params
+  const {
+    scale = cMajor,
+    ...durationContextParams
+  } = params
 
   const durationContext = new DurationContext(durationContextParams)
-  const voiceLines = getVoiceLines(durationContext)
+  const scaleContext = new ScaleContext(scale)
+  const voiceLines = getVoiceLines(durationContext, scaleContext)
 
   return voiceLines
 }

@@ -25,8 +25,6 @@ export async function play(music: Music, {
   const interpreter = new MusicInterpreter()
 
   try {
-    await audioContext.suspend()
-
     const { voices, labels } = interpreter.interpret(music)
 
     const startTime = labels.maybeGetExistingTimeByMaybeText(startLabel) ?? 0
@@ -70,7 +68,6 @@ export async function play(music: Music, {
       })
     })
 
-    await audioContext.resume()
     await Promise.all(played)
   } finally {
     await audioContext.close()
