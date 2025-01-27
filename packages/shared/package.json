@@ -19,7 +19,7 @@
     "postbuild": "tsc-alias --project tsconfig.build.json"
   },
   "devDependencies": {
-    "@nestjs/terminus": "10.2.3",
+    "@nestjs/terminus": "11.0.0",
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "7.16.0",
     "@typescript-eslint/parser": "6.13.2",
