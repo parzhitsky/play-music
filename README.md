@@ -1,3 +1,1 @@
-# `eco-monorepo-playground`
-
-Save results of a playground in a package
+# `play-music`
